@@ -58,6 +58,6 @@ Feel free to create an [issue](https://github.com/robincsamuel/ghost-google-driv
 
 Note: I'll try to put this to npm asap
 
-Thanks to [Minwe](http;//github.com/Minwe). I was following your package, even this readme!
+Thanks to [Minwe](https://github.com/Minwe). I was following your package, even this readme!
 
 
