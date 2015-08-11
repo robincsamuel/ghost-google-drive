@@ -4,9 +4,10 @@
  * @author : Robin C Samuel <hi@robinz.in> http://robinz.in
  * @date : 11th August 2015
  */
+ 
 var Promise     =   require('bluebird'),
-fs          =   require('fs'),
-googleapis  =   require('googleapis');
+    fs          =   require('fs'),
+    googleapis  =   require('googleapis');
 
 function ghostGoogleDrive(config){
   this.config = config || {};
