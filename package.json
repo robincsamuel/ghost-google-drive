@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/robincsamuel/ghost-google-drive",
   "dependencies": {
-    "google-drive": "0.0.6"
+    "bluebird": "2.9.34",
+    "googleapis": "2.1.3"
   }
 }
