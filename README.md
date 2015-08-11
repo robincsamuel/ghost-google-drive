@@ -10,7 +10,7 @@ In order to replace the storage module, the basic requirements are:
 
   ```
   cd [path/to/ghost]/content/storage
-  git clone https://github.com/Minwe/qn-store.git
+  git clone https://github.com/robincsamuel/ghost-google-drive.git
   ```
 - Install dependencies
 
@@ -57,3 +57,7 @@ Read [LICENSE](LICENSE)
 Feel free to create an [issue](https://github.com/robincsamuel/ghost-google-drive/issues), in case of troubles!
 
 Note: I'll try to put this to npm asap
+
+Thanks to [Minwe](http;//github.com/Minwe). I was following your package, even this readme!
+
+
