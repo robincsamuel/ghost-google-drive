@@ -4,10 +4,10 @@
  * @author : Robin C Samuel <hi@robinz.in> http://robinz.in
  * @date : 11th August 2015
  */
- 
 var Promise     =   require('bluebird'),
     fs          =   require('fs'),
-    googleapis  =   require('googleapis');
+    googleapis  =   require('googleapis'),
+    https        =   require('https');
 
 function ghostGoogleDrive(config){
   this.config = config || {};
@@ -42,7 +42,8 @@ ghostGoogleDrive.prototype.save = function(file){
           reject(err)
           return;
         }
-        resolve('/content/images/'+data.id);
+        // make the url looks like a file
+        resolve('/content/images/'+data.id+'.'+data.fileExtension);
       });
     });
   }); 
@@ -51,11 +52,12 @@ ghostGoogleDrive.prototype.save = function(file){
 ghostGoogleDrive.prototype.serve = function(){
   var _this = this;
   return function (req, res, next) {
-    var id = req.path.replace('/','');
+   // get the file id from url
+    var id = req.path.replace('/','').split('.')[0];
 
     var key = _this.config.key
     var jwtClient = new googleapis.auth.JWT(key.client_email, null, key.private_key, ['https://www.googleapis.com/auth/drive'], null);
-
+    //auth
     jwtClient.authorize(function(err, tokens) {
       if (err) {
         console.log(err);
@@ -64,7 +66,20 @@ ghostGoogleDrive.prototype.serve = function(){
       var drive = googleapis.drive({ version: 'v2', auth: jwtClient });
       drive.files.get({fileId:id}, function(err, file){
         if(!err) {
-          res.redirect(file.downloadUrl+'&access_token='+tokens.access_token);
+          var newReq = https.request(file.downloadUrl+'&access_token='+tokens.access_token, function(newRes) {
+            // Modify google headers here to cache!
+            var headers = newRes.headers;
+            headers['content-disposition'] = "attachment; filename="+file.originalFilename;
+            headers['cache-control'] = 'public, max-age=1209600';
+            delete headers['expires'];
+            res.writeHead(newRes.statusCode, headers);
+            // pipe the file
+            newRes.pipe(res);
+          }).on('error', function(err) {
+            res.statusCode = 500;
+            res.end();
+          });
+          req.pipe(newReq);
         } else {
           next()
         }
