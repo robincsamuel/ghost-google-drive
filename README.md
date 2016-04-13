@@ -40,19 +40,19 @@ You can add `ghost-google-drive`, `bluebird`, `googleapis` to dependencies in Gh
 ## Create OAuth credentials
 
 - Login to [google console](https://code.google.com/apis/console)
-- Create new project from the top right dropdown
+- Create new project from the top right dropdown  
   ![new project](http://i.imgur.com/h0jzQbw.jpg)
-- Select `Drive API` below `Google Apps APIs`
+- Select `Drive API` below `Google Apps APIs`  
   ![drive api](http://i.imgur.com/3m52BNX.jpg)
-- Click `Enable`
+- Click `Enable`  
   ![enable](http://i.imgur.com/zS5p30g.jpg)
-- You will be suggested to create credentials. Click `Go to Credentials`
+- You will be suggested to create credentials. Click `Go to Credentials`  
   ![go to credentials](http://i.imgur.com/B6sgOUb.jpg)
-- Select `service account` link
+- Select `service account` link  
   ![service account](http://i.imgur.com/cAA1XZE.jpg)
-- You will be redirected to `permissions` page. Click `Create service account`
+- You will be redirected to `permissions` page. Click `Create service account`  
   ![create](http://i.imgur.com/6xaT4g9.jpg)
-- Input necessary data
+- Input necessary data  
   ![input](http://i.imgur.com/vkybjqO.jpg)
 - After clicking `Create` button, google will generate a json file with the credentials for you. **Save it and don't lose!** 
 
