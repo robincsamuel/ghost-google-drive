@@ -15,7 +15,7 @@ Will work with version higher than `0.6.0` of Ghost!
    
  * Create storage module.
  
-  Create [injex.js](https://github.com/robincsamuel/ghost-google-drive/blob/master/index.js) file with folder path `content/storage/ghost-google-drive/index.js` (manually create folder if not exist).
+  Create [index.js](https://github.com/robincsamuel/ghost-google-drive/blob/master/index.js) file with folder path `content/storage/ghost-google-drive/index.js` (manually create folder if not exist).
 
 ### Via Git
 
