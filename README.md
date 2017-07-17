@@ -5,18 +5,6 @@ Will work with version higher than `0.6.0` of Ghost!
 
 ## Installation
 
-### Via NPM
-
- * Installation from NPM.  
- 
-   ```
-   npm install --save ghost-google-drive
-   ```
-   
- * Create storage module.
- 
-  Create [index.js](https://github.com/robincsamuel/ghost-google-drive/blob/master/index.js) file with folder path `content/storage/ghost-google-drive/index.js` (manually create folder if not exist).
-
 ### Via Git
 
 In order to replace the storage module, the basic requirements are:
