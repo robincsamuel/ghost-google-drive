@@ -3,17 +3,20 @@
 
 Will work with version higher than `0.6.0` of Ghost!
 
+### Whats is new in 1.x
+ - Rewritten to add support to Ghost 1.x.
+
 ## Installation
 
 ### Via Git
 
 In order to replace the storage module, the basic requirements are:
 
-- Create a new folder inside `/content` called `/storage`
+- Create a new directory `/storage` inside `/content/adapters` 
 - Clone this repo to `/storage`
 
   ```
-  cd [path/to/ghost]/content/storage
+  cd [path/to/ghost]/content/adapters/storage
   git clone https://github.com/robincsamuel/ghost-google-drive.git
   ```
 - Install dependencies
