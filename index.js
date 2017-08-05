@@ -8,8 +8,15 @@ var Promise = require('bluebird'),
   fs = require('fs'),
   googleapis = require('googleapis'),
   https = require('https'),
-  BaseStore = require('../../../core/server/storage/base'),
+  BaseStore,
   util = require('util');
+
+try {
+    BaseStore = require('ghost/core/server/storage/base');
+} catch (e) {
+    if (e.code !== 'MODULE_NOT_FOUND') throw e;
+    BaseStore = require(path.join(process.cwd(), 'core/server/storage/base'));
+}
 
 function ghostGoogleDrive(config) {
   BaseStore.call(this);
