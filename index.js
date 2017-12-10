@@ -13,7 +13,6 @@ var serveStatic = require('express').static,
     StorageBase = require('ghost-storage-base'),
     googleapis = require('googleapis'),
     https = require('https'),
-    path = require('path'),
     utils = require('util');
 
 
