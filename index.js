@@ -8,7 +8,6 @@
 
 const StorageBase = require("ghost-storage-base");
 const fs = require("fs");
-const path = require("path");
 const { google } = require("googleapis");
 const https = require("https");
 
@@ -107,8 +106,7 @@ class ghostGoogleDrive extends StorageBase {
       //auth
       jwtClient.authorize(function(err, tokens) {
         if (err) {
-          console.log(err);
-          return next();
+          return next(err);
         }
         const drive = google.drive({
           version: API_VERSION,
@@ -144,7 +142,7 @@ class ghostGoogleDrive extends StorageBase {
                 });
               req.pipe(newReq);
             } else {
-              next();
+              next(err);
             }
           }
         );
@@ -171,9 +169,7 @@ class ghostGoogleDrive extends StorageBase {
 
       jwtClient.authorize(function(err, tokens) {
         if (err) {
-          console.log(err);
-          reject(err);
-          return;
+          return reject(err);
         }
         const drive = google.drive({
           version: API_VERSION,
@@ -186,8 +182,7 @@ class ghostGoogleDrive extends StorageBase {
           function(err, data) {
             if (err) {
               console.log(err);
-              reject(err);
-              return;
+              return reject(err);
             }
             resolve();
           }
@@ -203,24 +198,54 @@ class ghostGoogleDrive extends StorageBase {
    * @param options
    */
   read(options) {
-    options = options || {};
-
-    // remove trailing slashes
-    options.path = (options.path || "").replace(/\/$|\\$/, "");
-
-    const targetPath = path.join(this.storagePath, options.path);
-
-    return new Promise(function(resolve, reject) {
-      fs.readFile(targetPath, function(err, bytes) {
+    const _this = this;
+    const id = options.path.replace("/", "").split(".")[0];
+    return new Promise((resolve, reject) => {
+      const key = _this.config.key;
+      const jwtClient = new google.auth.JWT(
+        key.client_email,
+        null,
+        key.private_key,
+        API_SCOPES,
+        null
+      );
+      //auth
+      jwtClient.authorize((err, tokens) => {
         if (err) {
-          return reject(
-            new errors.GhostError({
-              err: err,
-              message: "Could not read image: " + targetPath
-            })
-          );
+          return reject(err);
         }
-        resolve(bytes);
+        const drive = google.drive({
+          version: API_VERSION,
+          auth: jwtClient
+        });
+        drive.files.get(
+          {
+            fileId: id
+          },
+          (err, response) => {
+            if (!err) {
+              const file = response.data;
+              const req = https
+                .request(
+                  file.downloadUrl + "&access_token=" + tokens.access_token,
+                  res => {
+                    let bytes = [];
+                    res.on("data", chunk => {
+                      bytes.push(chunk);
+                    });
+                    res.on("end", () => {
+                      const binary = Buffer.concat(bytes);
+                      resolve(binary);
+                    });
+                  }
+                )
+                .end();
+              req.on("error", reject);
+            } else {
+              reject(err);
+            }
+          }
+        );
       });
     });
   }
