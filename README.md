@@ -63,7 +63,7 @@ Add the following to your environment configuration, `config.development.json` i
             "private_key_id": "YOUR PRIVATE KEY ID",
             "private_key": "YOUR PRIVATE KEY",
             "client_email": "YOUR CLIENT EMAIL",
-            "client_id": "YOUR CLIENT ID",
+            "client_id": "YOUR CLIENT ID"
      }
   }
 },
