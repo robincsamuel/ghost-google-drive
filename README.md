@@ -77,46 +77,34 @@ If you are not sure about how to get google ccredentials, please read below.
 
 - Login to [google console](https://code.google.com/apis/console)
 
-- Create new project from the top right dropdown  
+- Create a new project from the top right dropdown  
   ![new project](http://i.imgur.com/fitDSc9.png)
   
-- Click Enable APIS and Services 
+- Click on `Enable APIS and Services`
   ![enable_apis](http://i.imgur.com/sm9O48v.png)
   
-- Search Google Drive 
+- Search `Google Drive`
   ![enable_apis](http://i.imgur.com/vyHhaqu.png)
    
-- Enable Google Drive API  
+- Enable `Google Drive API`
   ![enable api](http://i.imgur.com/VoF3yLu.png)
 
-- Create Credentials from Top Right   
+- Click on the `Create Credentials` button.   
   ![enable api](http://i.imgur.com/qHbcl0F.png)
 
-- Input necessary data   
+- Add information for credentialing. 
   ![enable api](http://i.imgur.com/WMY2mFt.png)
 
-- Click Not Now    
+- You can skip the OAuth consent screen setup.   
   ![enable api](http://i.imgur.com/3mRqIuq.png)
 
-- From Dropdown menu choose Create Service Account Key    
+- From the credentials section, create a new `Service Account Key` 
   ![enable api](http://i.imgur.com/PE0MMw7.png)
   
-- Input necessary data and for Key Type Choose JSON    
+- Enter the account info, choose `JSON` for key type and download the file.
   ![enable api](http://i.imgur.com/QF0wSNn.png)
   
-- You will download file config JSON     
-  ![enable api](http://i.imgur.com/uyKZZ7G.png/)
-  
-- You can edit with text editor     
-  ![enable api](http://i.imgur.com/kNEV3hD.png)
-
-- Input necessary data for Oauth consent screen     
-  ![enable api](http://i.imgur.com/2v8ON5Z.png)
-  
-- Input necessary data      
-  ![enable api](http://i.imgur.com/KwCE6Qv.png)
-    
-And Finally your Google Drive API Key its Ready
+You can copy the contents of json file to the config file (under `storege.ghost-google-drive.ghost`) as shown in the `Configuration` step.
 
 ## License
 
