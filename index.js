@@ -72,6 +72,18 @@ class ghostGoogleDrive extends StorageBase {
             const { data } = res;
             // make the url looks like a file
             resolve("/content/images/" + data.id + "." + data.fileExtension);
+            
+            drive.permissions.create({
+              "fileId": data.id,
+              "resource": {
+                "role": "reader",
+                "type": "anyone"
+              }
+            })
+            .then(function(response) {
+              console.log("Response", response);
+            },
+            function(err) { console.error("Execute error", err); });
           }
         );
       });
