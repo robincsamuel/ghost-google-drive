@@ -75,12 +75,13 @@ class ghostGoogleDrive extends StorageBase {
 
             drive.permissions.insert({
               fileId: data.id,
-                resource: {
+              supportsAllDrives: true,
+              supportsTeamDrives: true,
+              resource: {
                   'type': 'anyone',
                   'role': 'reader',
-                },
-                fileId: data.id,
-                fields: 'id',
+              },
+              fields: 'id',
             }, function (err, res) {
               if (err) {
                 console.error(err);
@@ -137,7 +138,7 @@ class ghostGoogleDrive extends StorageBase {
               const file = response.data;
               const newReq = https
                 .request(
-                  file.webContentLink + "&access_token=" + tokens.access_token,
+                  file.webContentLink,
                   function (newRes) {
                     // Modify google headers here to cache!
                     const headers = newRes.headers;
@@ -243,7 +244,7 @@ class ghostGoogleDrive extends StorageBase {
               const file = response.data;
               const req = https
                 .request(
-                  file.webContentLink + "&access_token=" + tokens.access_token,
+                  file.webContentLink,
                   res => {
                     let bytes = [];
                     res.on("data", chunk => {
