@@ -52,7 +52,7 @@ class ghostGoogleDrive extends StorageBase {
           version: API_VERSION,
           auth: jwtClient
         });
-        drive.files.insert(
+        drive.files.create(
           {
             resource: {
               title: file.name,
