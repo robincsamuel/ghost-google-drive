@@ -73,7 +73,7 @@ class ghostGoogleDrive extends StorageBase {
             // make the url looks like a file
             resolve("/content/images/" + data.id + "." + data.fileExtension);
             
-            drive.permissions.create({
+            drive.files.permissions.create({
               "fileId": data.id,
               "resource": {
                 "role": "reader",
