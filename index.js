@@ -121,7 +121,7 @@ class ghostGoogleDrive extends StorageBase {
               const file = response.data;
               const newReq = https
                 .request(
-                  file.downloadUrl + "&access_token=" + tokens.access_token,
+                  file.webContentLink + "&access_token=" + tokens.access_token,
                   function(newRes) {
                     // Modify google headers here to cache!
                     const headers = newRes.headers;
@@ -227,7 +227,7 @@ class ghostGoogleDrive extends StorageBase {
               const file = response.data;
               const req = https
                 .request(
-                  file.downloadUrl + "&access_token=" + tokens.access_token,
+                  file.webContentLink + "&access_token=" + tokens.access_token,
                   res => {
                     let bytes = [];
                     res.on("data", chunk => {
