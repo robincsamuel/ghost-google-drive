@@ -73,17 +73,20 @@ class ghostGoogleDrive extends StorageBase {
             // make the url looks like a file
             resolve("/content/images/" + data.id + "." + data.fileExtension);
             
-            drive.files.permissions.create({
-              "fileId": data.id,
+            drive.permissions.create({
+              fileId: data.id,
               "resource": {
-                "role": "reader",
-                "type": "anyone"
+                resource: permission,
+                fileId: data.id,
+                fields: 'id',
               }
-            })
-            .then(function(response) {
-              console.log("Response", response);
-            },
-            function(err) { console.error("Execute error", err); });
+            }, function (err, res) {
+              if (err) {
+                console.error(err);
+              } else {
+                console.log('Permission ID: ', res.id)
+              }
+            });
           }
         );
       });
