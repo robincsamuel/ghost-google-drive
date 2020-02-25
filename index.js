@@ -11,7 +11,7 @@ const fs = require("fs");
 const { google } = require("googleapis");
 const https = require("https");
 
-const API_VERSION = "v3";
+const API_VERSION = "v2";
 const API_SCOPES = ["https://www.googleapis.com/auth/drive"];
 
 class ghostGoogleDrive extends StorageBase {
@@ -52,7 +52,7 @@ class ghostGoogleDrive extends StorageBase {
           version: API_VERSION,
           auth: jwtClient
         });
-        drive.files.create(
+        drive.files.insert(
           {
             resource: {
               title: file.name,
@@ -73,7 +73,7 @@ class ghostGoogleDrive extends StorageBase {
             // make the url looks like a file
             resolve("/content/images/" + data.id + "." + data.fileExtension);
 
-            drive.permissions.create({
+            drive.permissions.insert({
               fileId: data.id,
                 resource: {
                   'type': 'anyone',
