@@ -3,7 +3,7 @@
  * Google drive storage for ghost blog
  * @author : Robin C Samuel <hi@robinz.in> http://robinz.in
  * @date : 11th August 2015
- * @updated: 05th Aug 2017
+ * @updated: 25th Aug 2020 - @BehoyH
  */
 
 const StorageBase = require("ghost-storage-base");
@@ -11,7 +11,7 @@ const fs = require("fs");
 const { google } = require("googleapis");
 const https = require("https");
 
-const API_VERSION = "v2";
+const API_VERSION = "v3";
 const API_SCOPES = ["https://www.googleapis.com/auth/drive"];
 
 class ghostGoogleDrive extends StorageBase {
@@ -31,7 +31,7 @@ class ghostGoogleDrive extends StorageBase {
    */
   save(file, targetDir) {
     const _this = this;
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       const key = _this.config.key;
       const jwtClient = new google.auth.JWT(
         key.client_email,
@@ -41,7 +41,7 @@ class ghostGoogleDrive extends StorageBase {
         null
       );
 
-      jwtClient.authorize(function(err, tokens) {
+      jwtClient.authorize(function (err, tokens) {
         if (err) {
           console.log(err);
           reject(err);
@@ -63,7 +63,7 @@ class ghostGoogleDrive extends StorageBase {
               body: fs.createReadStream(file.path)
             }
           },
-          function(err, res) {
+          function (err, res) {
             if (err) {
               console.log(err);
               reject(err);
@@ -72,21 +72,15 @@ class ghostGoogleDrive extends StorageBase {
             const { data } = res;
             // make the url looks like a file
             resolve("/content/images/" + data.id + "." + data.fileExtension);
-            
-            var permission = [
-              {
-                'type': 'anyone',
-                'role': 'reader',
-              }
-            ];
-            
+
             drive.permissions.create({
               fileId: data.id,
-              "resource": {
-                resource: permission,
+                resource: {
+                  'type': 'anyone',
+                  'role': 'reader',
+                },
                 fileId: data.id,
                 fields: 'id',
-              }
             }, function (err, res) {
               if (err) {
                 console.error(err);
@@ -126,7 +120,7 @@ class ghostGoogleDrive extends StorageBase {
         null
       );
       //auth
-      jwtClient.authorize(function(err, tokens) {
+      jwtClient.authorize(function (err, tokens) {
         if (err) {
           return next(err);
         }
@@ -138,13 +132,13 @@ class ghostGoogleDrive extends StorageBase {
           {
             fileId: id
           },
-          function(err, response) {
+          function (err, response) {
             if (!err) {
               const file = response.data;
               const newReq = https
                 .request(
                   file.webContentLink + "&access_token=" + tokens.access_token,
-                  function(newRes) {
+                  function (newRes) {
                     // Modify google headers here to cache!
                     const headers = newRes.headers;
                     headers["content-disposition"] =
@@ -157,7 +151,7 @@ class ghostGoogleDrive extends StorageBase {
                     newRes.pipe(res);
                   }
                 )
-                .on("error", function(err) {
+                .on("error", function (err) {
                   console.log(err);
                   res.statusCode = 500;
                   res.end();
@@ -179,7 +173,7 @@ class ghostGoogleDrive extends StorageBase {
    */
   delete() {
     const _this = this;
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       const key = _this.config.key;
       const jwtClient = new google.auth.JWT(
         key.client_email,
@@ -189,7 +183,7 @@ class ghostGoogleDrive extends StorageBase {
         null
       );
 
-      jwtClient.authorize(function(err, tokens) {
+      jwtClient.authorize(function (err, tokens) {
         if (err) {
           return reject(err);
         }
@@ -201,7 +195,7 @@ class ghostGoogleDrive extends StorageBase {
           {
             fileId: id
           },
-          function(err, data) {
+          function (err, data) {
             if (err) {
               console.log(err);
               return reject(err);
