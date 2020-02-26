@@ -3,7 +3,7 @@
  * Google drive storage for ghost blog
  * @author : Robin C Samuel <hi@robinz.in> http://robinz.in
  * @date : 11th August 2015
- * @updated: 25th Aug 2020 - @BehoyH
+ * @updated: 25th Aug 2020 - @behoyh
  */
 
 const StorageBase = require("ghost-storage-base");
