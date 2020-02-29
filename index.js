@@ -3,7 +3,7 @@
  * Google drive storage for ghost blog
  * @author : Robin C Samuel <hi@robinz.in> http://robinz.in
  * @date : 11th August 2015
- * @updated: 05th Aug 2017
+ * @updated: 25th Aug 2020 - @behoyh
  */
 
 const StorageBase = require("ghost-storage-base");
@@ -72,6 +72,23 @@ class ghostGoogleDrive extends StorageBase {
             const { data } = res;
             // make the url looks like a file
             resolve("/content/images/" + data.id + "." + data.fileExtension);
+
+            drive.permissions.insert({
+              fileId: data.id,
+              supportsAllDrives: true,
+              supportsTeamDrives: true,
+              resource: {
+                  'type': 'anyone',
+                  'role': 'reader',
+              },
+              fields: 'id',
+            }, function(err, res) {
+              if (err) {
+                console.error(err);
+              } else {
+                console.log('Permission ID: ', res.id)
+              }
+            });
           }
         );
       });
@@ -121,7 +138,7 @@ class ghostGoogleDrive extends StorageBase {
               const file = response.data;
               const newReq = https
                 .request(
-                  file.downloadUrl + "&access_token=" + tokens.access_token,
+                  file.webContentLink,
                   function(newRes) {
                     // Modify google headers here to cache!
                     const headers = newRes.headers;
@@ -227,7 +244,7 @@ class ghostGoogleDrive extends StorageBase {
               const file = response.data;
               const req = https
                 .request(
-                  file.downloadUrl + "&access_token=" + tokens.access_token,
+                  file.webContentLink,
                   res => {
                     let bytes = [];
                     res.on("data", chunk => {
