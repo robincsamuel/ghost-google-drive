@@ -4,7 +4,7 @@
 Will work with version higher than `0.6.0` of Ghost!
 
 ### What's is new in 2.x
- - Rewritten to add support to Ghost 2.x.
+ - Rewritten to add support for Ghost 2.x.
 
 ## Installation
 ### Via NPM
