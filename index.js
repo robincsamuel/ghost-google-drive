@@ -37,7 +37,7 @@ var upload = (client, file) => {
       auth: client,
       resource: {
         name: file.name,
-        parents: []
+        mimeType: file.type
       },
       media: {
         mimeType: file.type,
@@ -52,6 +52,26 @@ var upload = (client, file) => {
       // Promise is resolved with the result of create call
       resolve(uploadedFile);
     });
+  });
+}
+
+var setPermissions = (client, data) => {
+  drive.permissions.create({
+    auth: client,
+    fileId: data.id,
+    supportsAllDrives: true,
+    supportsTeamDrives: true,
+    resource: {
+      'type': 'anyone',
+      'role': 'reader',
+    },
+    fields: 'id',
+  }, function (err, res) {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('Permission ID: ', res.id)
+    }
   });
 }
 
@@ -104,6 +124,7 @@ class ghostGoogleDrive extends StorageBase {
             .then(data => {
               console.log(data);
               resolve('/content/images/' + data.id + '.' + data.fileExtension);
+              setPermissions(client, data);
             });
         });
     });
