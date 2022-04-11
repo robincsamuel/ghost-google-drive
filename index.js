@@ -121,10 +121,10 @@ class ghostGoogleDrive extends StorageBase {
       auth(this.config)
         .then(client => {
           upload(client, file)
-            .then(data => {
-              console.log(data);
-              resolve('/content/images/' + data.id + '.' + data.fileExtension);
-              setPermissions(client, data);
+            .then(resp => {
+              console.log(resp);
+              resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
+              setPermissions(client, resp.data);
             });
         });
     });
