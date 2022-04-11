@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/robincsamuel/ghost-google-drive",
   "dependencies": {
-    "ghost-storage-base": "0.0.3",
-    "googleapis": "^39.1.0"
+    "ghost-storage-base": "1.0.0",
+    "googleapis": "100.0.0"
   }
 }
