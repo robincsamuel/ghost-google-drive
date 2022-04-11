@@ -144,7 +144,8 @@ class ghostGoogleDrive extends StorageBase {
           drive.files.get({ auth: client, fileId: fileId, alt: "media" }, { responseType: "stream" },
             function (err, resp) {
               if (err) {
-                console.error(err);
+                console.error(err, resp);
+                next();
               }
               resp.data.on("end", () => {
                 console.log("Done");
