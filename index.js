@@ -102,6 +102,7 @@ class ghostGoogleDrive extends StorageBase {
         .then(client => {
           upload(client, file)
             .then(data => {
+              console.log(data);
               resolve('/content/images/' + data.id + '.' + data.fileExtension);
             });
         });
@@ -144,8 +145,9 @@ class ghostGoogleDrive extends StorageBase {
           drive.files.get({ auth: client, fileId: fileId, alt: "media" }, { responseType: "stream" },
             function (err, resp) {
               if (err) {
-                console.error(err, resp);
+                console.error("fileId: " + fileId, "err: " + err);
                 next();
+                return;
               }
               resp.data.on("end", () => {
                 console.log("Done");
