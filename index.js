@@ -69,8 +69,6 @@ var setPermissions = (client, data) => {
   }, function (err, res) {
     if (err) {
       console.error(err);
-    } else {
-      console.log('Permission ID: ', res.id)
     }
   });
 }
@@ -80,8 +78,9 @@ var get = (client, fileId, callback) => {
     auth: client,
     fileId: fileId,
     alt: 'media'
-  }, (error, response) => {
-    callback(error, response);
+  }, { responseType: "stream" },
+    function (error, response) {
+      callback(error, response);
   });
 }
 
@@ -93,7 +92,7 @@ var remove = (client, file) => {
     },
     function (err, data) {
       if (err) {
-        console.log(err);
+        console.error(err);
         return reject(err);
       }
       resolve();
@@ -122,9 +121,8 @@ class ghostGoogleDrive extends StorageBase {
         .then(client => {
           upload(client, file)
             .then(resp => {
-              console.log(resp);
-              resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
               setPermissions(client, resp.data);
+              resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
             });
         });
     });
@@ -157,26 +155,17 @@ class ghostGoogleDrive extends StorageBase {
    * @returns {serveStaticContent}
    */
   serve() {
-    let _this = this;
+    const _this = this;
     return function serveContent(req, res, next) {
       // get the file id from url
       var fileId = req.path.replace('/', '').split('.')[0];
-      _this.exists(fileId).then(() => {
-        auth(_this.config).then(client => {
-          drive.files.get({ auth: client, fileId: fileId, alt: "media" }, { responseType: "stream" },
-            function (err, resp) {
-              if (err) {
-                console.error("fileId: " + fileId, "err: " + err);
-                next();
-                return;
-              }
-              resp.data.on("end", () => {
-                console.log("Done");
-              }).on("error", err => {
-                console.log("Error", err);
-              })
-              .pipe(res);
-          });
+      auth(_this.config).then(client => {
+        get(client, fileId, (err, resp) => {
+            if (err) {
+              console.error("fileId: " + fileId, "err: " + err);
+              return next();
+            }
+            resp.data.pipe(res);
         });
       });
     }
@@ -203,7 +192,6 @@ class ghostGoogleDrive extends StorageBase {
    */
   read(options) {
     var fileId = options.path.replace('/', '').split('.')[0];
-    console.log(fileId,options);
     return new Promise((resolve, reject) => {
       auth(this.config)
         .then(client => {
