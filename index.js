@@ -55,7 +55,7 @@ var upload = (client, file) => {
   });
 }
 
-var setPermissions = (client, data) => {
+var setPermissions = (client, data, callback) => {
   drive.permissions.create({
     auth: client,
     fileId: data.id,
@@ -66,10 +66,8 @@ var setPermissions = (client, data) => {
       'role': 'reader',
     },
     fields: 'id',
-  }, function (err, res) {
-    if (err) {
-      console.error(err);
-    }
+  }, function (error, response) {
+      callback(error, response);
   });
 }
 
@@ -121,8 +119,12 @@ class ghostGoogleDrive extends StorageBase {
         .then(client => {
           upload(client, file)
             .then(resp => {
-              setPermissions(client, resp.data);
-              resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
+              setPermissions(client, resp.data, (err, res) => {
+                if (err) {
+                  console.error(err);
+                }
+                resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
+              });
             });
         });
     });
