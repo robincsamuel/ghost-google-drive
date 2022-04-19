@@ -55,19 +55,25 @@ var upload = (client, file) => {
   });
 }
 
-var setPermissions = (client, data, callback) => {
-  drive.permissions.create({
-    auth: client,
-    fileId: data.id,
-    supportsAllDrives: true,
-    supportsTeamDrives: true,
-    resource: {
-      'type': 'anyone',
-      'role': 'reader',
-    },
-    fields: 'id',
-  }, function (error, response) {
-      callback(error, response);
+var setPermissions = (client, data) => {
+  return new Promise((resolve, reject) => {
+    drive.permissions.create({
+      auth: client,
+      fileId: data.id,
+      supportsAllDrives: true,
+      supportsTeamDrives: true,
+      resource: {
+        'type': 'anyone',
+        'role': 'reader',
+      },
+      fields: 'id',
+    }, function (err, res) {
+      if (err) {
+        console.error(err);
+        reject(err);
+      }
+      resolve(res);
+    });
   });
 }
 
@@ -91,7 +97,7 @@ var remove = (client, file) => {
     function (err, data) {
       if (err) {
         console.error(err);
-        return reject(err);
+        reject(err);
       }
       resolve();
     });
@@ -119,11 +125,9 @@ class ghostGoogleDrive extends StorageBase {
         .then(client => {
           upload(client, file)
             .then(resp => {
-              setPermissions(client, resp.data, (err, res) => {
-                if (err) {
-                  console.error(err);
-                }
-                resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
+              setPermissions(client, resp.data)
+                .then(res => {
+                  resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
               });
             });
         });
