@@ -1,6 +1,6 @@
 {
   "name": "ghost-google-drive",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Google drive store for Ghost blog.",
   "main": "index.js",
   "scripts": {
