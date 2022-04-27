@@ -107,7 +107,7 @@ If you are not sure about how to get google ccredentials, please read below.
 You can copy the contents of json file to the config file (under `storege.ghost-google-drive.ghost`) as shown in the `Configuration` step.
 
 ## Managing Google Drive
-If you've followed the steps above, you've just created a service account. A service account can't be logged into like a normal Google Drive account. Fret not! [We've built a solution to help.](https://github.com/behoyh/google-drive-ui)
+If you've followed the steps above, you just created a service account. A service account can't be logged into like a normal Google Drive account. Fret not! [We've built a solution to help.](https://github.com/behoyh/google-drive-ui)
 
 ## License
 
