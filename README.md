@@ -104,7 +104,16 @@ If you are not sure about how to get google ccredentials, please read below.
 - Enter the account info, choose `JSON` for key type and download the file.
   ![enable api](http://i.imgur.com/QF0wSNn.png)
   
-You can copy the contents of json file to the config file (under `storege.ghost-google-drive.ghost`) as shown in the `Configuration` step.
+- You can copy the contents of json file to the config file (under `storege.ghost-google-drive.key`) as shown in the `Configuration` step.
+  ![enable api](https://i.imgur.com/pPr69gn.png)
+- Create the folder in your personal Google Drive
+  ![](https://imgur.com/zEBqjSw.png)
+  ![](https://imgur.com/hGvp9U9.png)
+- Invite the service email to this folder and set this account th editor
+  ![](https://imgur.com/Stnh6JM.png)
+- Copy the folder's web url to get the folder id and paste to `storege.ghost-google-drive.folderId`
+  ![](https://imgur.com/TiUyFoG.png)
+- Restart the Ghost
 
 ## Managing Google Drive
 If you've followed the steps above, you just created a service account. A service account can't be logged into like a normal Google Drive account. Fret not! [We've built a solution to help.](https://github.com/behoyh/google-drive-ui)

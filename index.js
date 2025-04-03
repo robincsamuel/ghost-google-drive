@@ -12,32 +12,24 @@ const { google } = require("googleapis");
 const drive = google.drive("v3");
 
 var auth = config => {
-  var jwtClient = new google.auth.JWT(
-    config.key.client_email,
-    null,
-    config.key.private_key,
-    ['https://www.googleapis.com/auth/drive'],
-    null
-  );
+  const serviceAccountKey = config.key;
 
-  return new Promise((resolve, reject) => {
-    jwtClient.authorize(err => {
-      if (err) {
-        reject(err);
-      }
+  serviceAccountKey.private_key = serviceAccountKey.private_key.replace(/\\n/g, '\n');
 
-      resolve(jwtClient);
-    });
-  });
+  return Promise.resolve(new google.auth.GoogleAuth({
+    credentials: serviceAccountKey,
+    scopes: ['https://www.googleapis.com/auth/drive'],
+  }))
 }
 
-var upload = (client, file) => {
+var upload = (client, file, parentId) => {
   return new Promise((resolve, reject) => {
     drive.files.create({
       auth: client,
       resource: {
         name: file.name,
-        mimeType: file.type
+        mimeType: file.type,
+        parents: [parentId]
       },
       media: {
         mimeType: file.type,
@@ -123,7 +115,7 @@ class ghostGoogleDrive extends StorageBase {
     return new Promise((resolve, reject) => {
       auth(this.config)
         .then(client => {
-          upload(client, file)
+          upload(client, file, this.config.folderId)
             .then(resp => {
               setPermissions(client, resp.data)
                 .then(res => {
