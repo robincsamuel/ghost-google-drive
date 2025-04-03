@@ -113,7 +113,7 @@ If you are not sure about how to get google ccredentials, please read below.
   ![](https://imgur.com/Stnh6JM.png)
 - Copy the folder's web url to get the folder id and paste to `storege.ghost-google-drive.folderId`
   ![](https://imgur.com/TiUyFoG.png)
-- Restart the Ghost
+- Restart Ghost
 
 ## Managing Google Drive
 If you've followed the steps above, you just created a service account. A service account can't be logged into like a normal Google Drive account. Fret not! [We've built a solution to help.](https://github.com/behoyh/google-drive-ui)
