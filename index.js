@@ -1,9 +1,9 @@
 "use strict";
- /*
-  * Google drive storage for ghost blog
-  * @author : Robin C Samuel <hi@robinz.in> http://robinz.in
-  * @updated : 3rd April 2025
-  * 
+/*
+ * Google drive storage for ghost blog
+ * @author : Robin C Samuel <hi@robinz.in> http://robinz.in
+ * @updated : 3rd April 2025
+ *
 */
 
 const StorageBase = require("ghost-storage-base");
@@ -11,7 +11,7 @@ const fs = require("fs");
 const { google } = require("googleapis");
 const drive = google.drive("v3");
 
-var auth = config => {
+function getGoogleAuthClient(config) {
   const serviceAccountKey = config.key;
 
   serviceAccountKey.private_key = serviceAccountKey.private_key.replace(/\\n/g, '\n');
@@ -22,15 +22,48 @@ var auth = config => {
   }))
 }
 
+function getJWTClient(config) {
+  var jwtClient = new google.auth.JWT(
+    config.key.client_email,
+    null,
+    config.key.private_key,
+    ['https://www.googleapis.com/auth/drive'],
+    null
+  );
+
+  return new Promise((resolve, reject) => {
+    jwtClient.authorize(err => {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(jwtClient);
+    });
+  });
+}
+
+var auth = config => {
+  if (config.authType === 'googleAuth') {
+    return getGoogleAuthClient(config);
+  }
+  if (config.authType === 'jwt') {
+    return getJWTClient(config);
+  }
+  return getJWTClient(config);
+}
+
 var upload = (client, file, parentId) => {
   return new Promise((resolve, reject) => {
+    const resource = {
+      name: file.name,
+      mimeType: file.type
+    };
+    if (parentId) {
+      resource.parents = [parentId];
+    }
     drive.files.create({
       auth: client,
-      resource: {
-        name: file.name,
-        mimeType: file.type,
-        parents: [parentId]
-      },
+      resource: resource,
       media: {
         mimeType: file.type,
         body: fs.createReadStream(file.path)
@@ -77,7 +110,7 @@ var get = (client, fileId, callback) => {
   }, { responseType: "stream" },
     function (error, response) {
       callback(error, response);
-  });
+    });
 }
 
 var remove = (client, file) => {
@@ -86,13 +119,13 @@ var remove = (client, file) => {
       auth: client,
       fileId: file
     },
-    function (err, data) {
-      if (err) {
-        console.error(err);
-        reject(err);
-      }
-      resolve();
-    });
+      function (err, data) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        resolve();
+      });
   });
 }
 
@@ -120,7 +153,7 @@ class ghostGoogleDrive extends StorageBase {
               setPermissions(client, resp.data)
                 .then(res => {
                   resolve('/content/images/' + resp.data.id + '.' + resp.data.fileExtension);
-              });
+                });
             });
         });
     });
@@ -128,8 +161,8 @@ class ghostGoogleDrive extends StorageBase {
 
   /**
    * checks for existance of file (handle 404's proper)
-   * @param {*} fileName 
-   * @param {*} targetDir 
+   * @param {*} fileName
+   * @param {*} targetDir
    * @returns Promise.<*>
    */
   exists(fileName, targetDir) {
@@ -159,11 +192,11 @@ class ghostGoogleDrive extends StorageBase {
       var fileId = req.path.replace('/', '').split('.')[0];
       auth(_this.config).then(client => {
         get(client, fileId, (err, resp) => {
-            if (err) {
-              console.error("fileId: " + fileId, "err: " + err);
-              return next();
-            }
-            resp.data.pipe(res);
+          if (err) {
+            console.error("fileId: " + fileId, "err: " + err);
+            return next();
+          }
+          resp.data.pipe(res);
         });
       });
     }

@@ -1,5 +1,5 @@
 # Ghost Google Drive
-[Google drive storage](https://github.com/robincsamuel/ghost-google-drive) for ghost allows you to store the contents on google drive. I believe its helpful if you are gonna host your ghost app on heroku.  
+[Google drive storage](https://github.com/robincsamuel/ghost-google-drive) for ghost allows you to store the contents on google drive. I believe its helpful if you are gonna host your ghost app on heroku.
 
 Will work with version higher than `0.6.0` of Ghost!
 
@@ -55,10 +55,29 @@ In order to replace the storage module, the basic requirements are:
 
 Add the following to your environment configuration, `config.development.json` if development.
 
+- authType: googleAuth
 ```js
 "storage": {
   "active": "ghost-google-drive",
   "ghost-google-drive": {
+    "authType": "googleAuth",
+    "key": {
+            "private_key_id": "YOUR PRIVATE KEY ID",
+            "private_key": "YOUR PRIVATE KEY",
+            "client_email": "YOUR CLIENT EMAIL",
+            "client_id": "YOUR CLIENT ID"
+     },
+     "folderId": "xxxxx"
+  }
+},
+
+```
+- authType: jwt **default**
+```js
+"storage": {
+  "active": "ghost-google-drive",
+  "ghost-google-drive": {
+    "authType": "jwt",
     "key": {
             "private_key_id": "YOUR PRIVATE KEY ID",
             "private_key": "YOUR PRIVATE KEY",
@@ -77,42 +96,48 @@ If you are not sure about how to get google ccredentials, please read below.
 
 - Login to [google console](https://code.google.com/apis/console)
 
-- Create a new project from the top right dropdown  
+- Create a new project from the top right dropdown
   ![new project](http://i.imgur.com/fitDSc9.png)
-  
+
 - Click on `Enable APIS and Services`
   ![enable_apis](http://i.imgur.com/sm9O48v.png)
-  
+
 - Search `Google Drive`
   ![enable_apis](http://i.imgur.com/vyHhaqu.png)
-   
+
 - Enable `Google Drive API`
   ![enable api](http://i.imgur.com/VoF3yLu.png)
 
-- Click on the `Create Credentials` button.   
+- Click on the `Create Credentials` button.
   ![enable api](http://i.imgur.com/qHbcl0F.png)
 
-- Add information for credentialing. 
+- Add information for credentialing.
   ![enable api](http://i.imgur.com/WMY2mFt.png)
 
-- You can skip the OAuth consent screen setup.   
+- You can skip the OAuth consent screen setup.
   ![enable api](http://i.imgur.com/3mRqIuq.png)
 
-- From the credentials section, create a new `Service Account Key` 
+- From the credentials section, create a new `Service Account Key`
   ![enable api](http://i.imgur.com/PE0MMw7.png)
-  
+
 - Enter the account info, choose `JSON` for key type and download the file.
   ![enable api](http://i.imgur.com/QF0wSNn.png)
-  
-- You can copy the contents of json file to the config file (under `storege.ghost-google-drive.key`) as shown in the `Configuration` step.
+
+- You can copy the contents of json file to the config file (under `storage.ghost-google-drive.key`) as shown in the `Configuration` step.
   ![enable api](https://i.imgur.com/pPr69gn.png)
+
+---
+This part below is only for authType: `googleAuth`
 - Create the folder in your personal Google Drive
   ![](https://imgur.com/zEBqjSw.png)
   ![](https://imgur.com/hGvp9U9.png)
 - Invite the service email to this folder and set this account th editor
   ![](https://imgur.com/Stnh6JM.png)
-- Copy the folder's web url to get the folder id and paste to `storege.ghost-google-drive.folderId`
+- Copy the folder's web url to get the folder id and paste to `storage.ghost-google-drive.folderId`
   ![](https://imgur.com/TiUyFoG.png)
+
+---
+
 - Restart Ghost
 
 ## Managing Google Drive
@@ -125,5 +150,3 @@ Read [LICENSE](LICENSE)
 Feel free to create an [issue](https://github.com/robincsamuel/ghost-google-drive/issues), in case of troubles!
 
 Thanks to [Minwe](https://github.com/Minwe). I was following your package, even this readme!
-
-
